@@ -20,7 +20,7 @@
             <pattern>${PATTERN}</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${majie.path}/error/log-%d{yyyy-MM-dd}.%i.txt</fileNamePattern>
+            <fileNamePattern>${majie.path}/log/error/log-%d{yyyy-MM-dd}.%i.txt</fileNamePattern>
             <maxFileSize>100MB</maxFileSize>
             <maxHistory>100</maxHistory>
             <totalSizeCap>20GB</totalSizeCap>
@@ -35,7 +35,7 @@
             <pattern>${PATTERN}</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${majie.path}/info/log-%d{yyyy-MM-dd}.%i.txt</fileNamePattern>
+            <fileNamePattern>${majie.path}/log/info/log-%d{yyyy-MM-dd}.%i.txt</fileNamePattern>
             <maxFileSize>100MB</maxFileSize>
             <maxHistory>100</maxHistory>
             <totalSizeCap>20GB</totalSizeCap>

@@ -47,6 +47,21 @@ type Task {
     group: TaskGroup
     title: String
     content: String
+    creator: Operator
+    createDateTime: LocalDateTime
+    modifier: Operator
+    modifyDateTime: LocalDateTime
+}
+
+type TaskFeedback {
+    id: ID!
+    task: Task
+    content: String
+    attachments: [Attachment]
+    creator: Operator
+    createDateTime: LocalDateTime
+    modifier: Operator
+    modifyDateTime: LocalDateTime
 }
 
 type TaskGroup {
@@ -56,4 +71,12 @@ type TaskGroup {
     createDateTime: LocalDateTime
     modifier: Operator
     modifyDateTime: LocalDateTime
+}
+
+type TaskNotice {
+    id: ID!
+    task: Task
+    content: String
+    receivers: [Operator]
+    noticed: Boolean
 }

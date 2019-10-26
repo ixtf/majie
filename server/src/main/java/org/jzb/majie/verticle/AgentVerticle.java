@@ -24,9 +24,14 @@ import io.vertx.ext.web.handler.graphql.GraphiQLHandler;
 import io.vertx.ext.web.handler.graphql.GraphiQLHandlerOptions;
 import org.apache.commons.io.FileUtils;
 import org.jzb.majie.MajieModule;
+import org.jzb.majie.application.AuthService;
+import org.jzb.majie.application.AuthService.DownloadFile;
 
+import java.net.URLEncoder;
 import java.util.Set;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static javax.ws.rs.core.MediaType.APPLICATION_OCTET_STREAM;
 import static org.jzb.majie.verticle.FileUploadsVerticle.message;
 
 /**
@@ -42,6 +47,21 @@ public class AgentVerticle extends AbstractVerticle {
         router.route().handler(ResponseContentTypeHandler.create());
         router.route("/status").handler(HealthCheckHandler.create(vertx));
 
+        router.post("/downloads/:token").produces(APPLICATION_OCTET_STREAM).handler(rc -> {
+            final AuthService authService = MajieModule.getInstance(AuthService.class);
+            authService.downloadFile(rc.pathParam("token")).setHandler(ar -> {
+                if (ar.succeeded()) {
+                    final DownloadFile downloadFile = ar.result();
+                    final String fileName = downloadFile.getFileName();
+                    final String encodeFileName = URLEncoder.encode(fileName, UTF_8);
+                    rc.response().putHeader("Content-Disposition", "attachment;filename=" + encodeFileName)
+                            .sendFile(downloadFile.getFilePath());
+                } else {
+                    rc.fail(ar.cause());
+                }
+            });
+        });
+
         final JWTAuthHandler jwtAuthHandler = JWTAuthHandler.create(MajieModule.getInstance(JWTAuth.class));
         router.route("/graphql/*").handler(jwtAuthHandler);
         router.route("/api/*").handler(jwtAuthHandler);
@@ -49,7 +69,6 @@ public class AgentVerticle extends AbstractVerticle {
         final GraphQL graphQL = MajieModule.getInstance(GraphQL.class);
         router.route("/graphql").handler(ApolloWSHandler.create(graphQL));
         router.route("/graphql").handler(GraphQLHandler.create(graphQL));
-
         final GraphiQLHandlerOptions options = new GraphiQLHandlerOptions().setEnabled(true);
         router.route("/graphiql/*").handler(GraphiQLHandler.create(options).graphiQLRequestHeaders(rc -> {
             final String token = rc.get("token");

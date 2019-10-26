@@ -1,7 +1,6 @@
 package org.jzb.majie;
 
 import com.github.ixtf.japp.core.J;
-import com.github.ixtf.persistence.IEntity;
 import com.github.ixtf.persistence.mongo.Jmongo;
 import com.google.common.io.Resources;
 import com.google.inject.*;
@@ -64,6 +63,10 @@ public class MajieModule extends AbstractModule {
         return INJECTOR.getInstance(clazz);
     }
 
+    public static <T> T getInstance(Key<T> key) {
+        return INJECTOR.getInstance(key);
+    }
+
     public static void injectMembers(Object o) {
         INJECTOR.injectMembers(o);
     }
@@ -76,18 +79,8 @@ public class MajieModule extends AbstractModule {
     @Provides
     @Singleton
     @Named("rootPath")
-    private static Path rootPath() {
+    private Path rootPath() {
         return Paths.get(System.getProperty("majie.path", "/home/majie"));
-    }
-
-    public static <T extends IEntity> Path luceneIndexPath(Class<T> entityClass) {
-        final Path path = Paths.get("db", "lucene", entityClass.getSimpleName());
-        return rootPath().resolve(path);
-    }
-
-    public static <T extends IEntity> Path luceneTaxoPath(Class<T> entityClass) {
-        final Path path = Paths.get("db", "lucene", entityClass.getSimpleName() + "_Taxonomy");
-        return rootPath().resolve(path);
     }
 
     @SneakyThrows
@@ -135,7 +128,7 @@ public class MajieModule extends AbstractModule {
 
     @Provides
     @Singleton
-    private Jmongo Jmongo(@Named("vertxConfig") JsonObject vertxConfig) {
+    private Jmongo Jmongo() {
         return Jmongo.of(MajieJmongoOptions.class);
     }
 

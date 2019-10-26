@@ -35,7 +35,7 @@ public class TaskFeedback implements IEntityLoggable<Operator>, Comparable<TaskF
     @Setter
     @Column
     @NotBlank
-    private String note;
+    private String content;
     @Getter
     @Setter
     @Column

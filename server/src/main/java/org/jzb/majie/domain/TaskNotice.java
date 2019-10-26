@@ -34,13 +34,13 @@ public class TaskNotice implements IEntity {
     @Getter
     @Setter
     @Column
-    @Size(min = 1)
-    private Collection<Operator> receivers;
+    @NotBlank
+    private String content;
     @Getter
     @Setter
     @Column
-    @NotBlank
-    private String content;
+    @Size(min = 1)
+    private Collection<Operator> receivers;
     @Getter
     @Setter
     @Column

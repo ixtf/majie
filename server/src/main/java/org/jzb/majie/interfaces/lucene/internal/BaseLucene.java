@@ -12,10 +12,9 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.store.FSDirectory;
-import org.jzb.majie.MajieModule;
+import org.jzb.majie.Util;
 import reactor.core.publisher.Mono;
 
-import javax.inject.Named;
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
 import java.nio.file.Path;
@@ -35,9 +34,9 @@ public abstract class BaseLucene<T extends IEntity> {
     protected BaseLucene( Jmongo jmongo) {
         this.jmongo = jmongo;
         entityClass = entityClass();
-        final Path indexPath = MajieModule.luceneIndexPath(entityClass);
+        final Path indexPath = Util.luceneIndexPath(entityClass);
         indexWriter = new IndexWriter(FSDirectory.open(indexPath), new IndexWriterConfig(new SmartChineseAnalyzer()));
-        final Path taxoPath = MajieModule.luceneTaxoPath(entityClass);
+        final Path taxoPath = Util.luceneTaxoPath(entityClass);
         taxoWriter = new DirectoryTaxonomyWriter(FSDirectory.open(taxoPath));
         facetsConfig = facetsConfig();
     }
