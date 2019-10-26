@@ -15,5 +15,4 @@ public interface AttachmentService {
 
     Mono<Attachment> handleUpload(Principal principal, String uploadedFileName, Attachment attachment);
 
-
 }

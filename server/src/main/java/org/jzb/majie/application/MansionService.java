@@ -13,6 +13,7 @@ import java.security.Principal;
  */
 @ImplementedBy(MansionServiceImpl.class)
 public interface MansionService {
+
     Mono<Mansion> create(Principal principal, MansionUpdateCommand command);
 
     Mono<Mansion> update(Principal principal, String id, MansionUpdateCommand command);

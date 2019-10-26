@@ -16,8 +16,10 @@ public class WeixinInterfaceVerticle extends AbstractVerticle {
     @Override
     public void start(Future<Void> startFuture) throws Exception {
         start();
-        final WeixinService weixinService = MajieModule.getInstance(WeixinService.class);
-        vertx.eventBus().<String>consumer(ADDRESS, reply -> weixinService.msgPushed(reply.body())).completionHandler(startFuture);
+        vertx.eventBus().<String>consumer(ADDRESS, reply -> {
+            final WeixinService weixinService = MajieModule.getInstance(WeixinService.class);
+            weixinService.msgPushed(reply.body());
+        }).completionHandler(startFuture);
     }
 
 }

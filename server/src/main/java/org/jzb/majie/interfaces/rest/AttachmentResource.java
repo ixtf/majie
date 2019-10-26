@@ -7,7 +7,10 @@ import org.jzb.weixin.mp.MpClient;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
-import javax.ws.rs.*;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 
 import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 
@@ -24,14 +27,6 @@ public class AttachmentResource {
     private AttachmentResource(Vertx vertx, MpClient mpClient) {
         this.vertx = vertx;
         this.mpClient = mpClient;
-    }
-
-    @GET
-    public Mono<String> get(@QueryParam("signature") String signature, @QueryParam("timestamp") String timestamp, @QueryParam("nonce") String nonce, @QueryParam("echostr") String echostr) {
-// fixme 验证token不成功
-        System.out.println(echostr);
-        return Mono.just(echostr);
-//            return mpClient.verifyUrl(signature, timestamp, nonce, echostr);
     }
 
     @POST

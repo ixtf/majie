@@ -1,14 +1,9 @@
 package org.jzb.majie;
 
-import com.github.ixtf.japp.core.J;
 import com.github.ixtf.persistence.mongo.Jmongo;
 import com.google.common.io.Resources;
 import com.google.inject.*;
 import com.google.inject.name.Named;
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.reactivestreams.client.MongoClient;
-import com.mongodb.reactivestreams.client.MongoClients;
 import graphql.GraphQL;
 import graphql.schema.GraphQLSchema;
 import graphql.schema.idl.RuntimeWiring;
@@ -29,16 +24,13 @@ import java.io.File;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.github.ixtf.japp.core.Constant.MAPPER;
 import static com.github.ixtf.japp.core.Constant.YAML_MAPPER;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.util.stream.Collectors.joining;
 
 //import org.jzb.weixin.mp.MpAccessToken;
 
@@ -105,25 +97,6 @@ public class MajieModule extends AbstractModule {
         final Properties properties = new Properties();
         properties.putAll(config.getMap());
         return MpClient.getInstance(properties);
-    }
-
-    @Provides
-    @Singleton
-    private MongoClient MongoClient(@Named("vertxConfig") JsonObject vertxConfig) {
-        final JsonObject config = vertxConfig.getJsonObject("mongo");
-        final String host = config.getString("host");
-        final StringBuilder sb = new StringBuilder("mongodb://").append(host);
-        final Collection<String> excludes = Set.of("host", "port");
-        final String params = config.getMap().entrySet().stream()
-                .filter(entry -> !excludes.contains(entry.getKey()))
-                .map(entry -> entry.getKey() + "=" + entry.getValue())
-                .collect(joining("&"));
-        if (J.nonBlank(params)) {
-            sb.append("/?").append(params);
-        }
-        return MongoClients.create(MongoClientSettings.builder()
-                .applyConnectionString(new ConnectionString(sb.toString()))
-                .build());
     }
 
     @Provides

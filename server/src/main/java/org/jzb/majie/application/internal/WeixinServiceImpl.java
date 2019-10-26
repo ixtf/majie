@@ -34,7 +34,9 @@ public class WeixinServiceImpl implements WeixinService {
 
     @Override
     public void msgPushed(String body) {
-        Mono.fromCallable(() -> new MsgPushed(body)).flatMap(msgPushed -> {
+        Mono.fromCallable(() -> new MsgPushed(body)).subscribeOn(Schedulers.elastic()).flatMap(msgPushed -> {
+            System.out.println(msgPushed);
+
             if (msgPushed.isEvt_subscribe()) {
                 return Flux.merge(
                         handleSubscribe(msgPushed),
@@ -47,7 +49,7 @@ public class WeixinServiceImpl implements WeixinService {
                 return handleInvite(msgPushed);
             }
             return Mono.empty();
-        }).subscribeOn(Schedulers.elastic()).doOnError(err -> log.error("", err)).subscribe();
+        }).doOnError(err -> log.error("", err)).subscribe();
     }
 
     private Mono<WeixinOperator> handleSubscribe(MsgPushed msgPushed) {
@@ -74,10 +76,7 @@ public class WeixinServiceImpl implements WeixinService {
                 weixinOperator.setOperator(operator);
                 operator.setName(weixinOperator.getNickname());
                 return weixinOperator;
-            })).map(weixinOperator -> {
-                uow.commit();
-                return weixinOperator;
-            });
+            })).flatMap(it -> uow.rxCommit().thenReturn(it));
         });
     }
 

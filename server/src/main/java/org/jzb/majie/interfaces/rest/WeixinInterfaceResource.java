@@ -27,7 +27,10 @@ public class WeixinInterfaceResource {
     }
 
     @GET
-    public Mono<String> get(@QueryParam("signature") String signature, @QueryParam("timestamp") String timestamp, @QueryParam("nonce") String nonce, @QueryParam("echostr") String echostr) {
+    public Mono<String> get(@QueryParam("signature") String signature,
+                            @QueryParam("timestamp") String timestamp,
+                            @QueryParam("nonce") String nonce,
+                            @QueryParam("echostr") String echostr) {
 // fixme 验证token不成功
         System.out.println(echostr);
         return Mono.just(echostr);
@@ -35,7 +38,12 @@ public class WeixinInterfaceResource {
     }
 
     @POST
-    public Mono<Void> post(@QueryParam("encrypt_type") String encrypt_type, @QueryParam("msg_signature") String msg_signature, @QueryParam("signature") String signature, @QueryParam("timestamp") String timestamp, @QueryParam("nonce") String nonce, String postData) {
+    public Mono<Void> post(@QueryParam("signature") String signature,
+                           @QueryParam("timestamp") String timestamp,
+                           @QueryParam("nonce") String nonce,
+                           @QueryParam("msg_signature") String msg_signature,
+                           @QueryParam("encrypt_type") String encrypt_type,
+                           String postData) {
         return Mono.fromCallable(() -> "aes".equalsIgnoreCase(encrypt_type) ? mpClient.decryptMsg(msg_signature, timestamp, nonce, postData) : postData)
                 .subscribeOn(Schedulers.elastic())
                 .doOnNext(it -> vertx.eventBus().send(WeixinInterfaceVerticle.ADDRESS, it))
