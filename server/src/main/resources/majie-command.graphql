@@ -1,0 +1,24 @@
+input MansionUpdateCommand{
+    name: String!
+}
+
+input OperatorUpdateCommand{
+    name: String!
+    admin: Boolean
+}
+
+input TaskGroupUpdateCommand{
+    mansion: EntityDTO!
+    name: String!
+}
+
+input TaskUpdateCommand{
+    group: EntityDTO!
+    title: String!
+    content: String!
+}
+
+input TokenCommand{
+    loginId: String!
+    loginPassword: String!
+}
