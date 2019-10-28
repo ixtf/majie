@@ -2,6 +2,7 @@ package org.jzb.majie.application.internal;
 
 import com.github.ixtf.japp.codec.Jcodec;
 import com.github.ixtf.japp.core.exception.JAuthenticationError;
+import com.github.ixtf.japp.core.exception.JAuthorizationError;
 import com.github.ixtf.persistence.mongo.Jmongo;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -15,11 +16,14 @@ import io.vertx.ext.jwt.JWTOptions;
 import lombok.extern.slf4j.Slf4j;
 import org.jzb.majie.Util;
 import org.jzb.majie.application.AuthService;
+import org.jzb.majie.application.QueryService;
 import org.jzb.majie.application.command.TokenCommand;
 import org.jzb.majie.domain.Attachment;
 import org.jzb.majie.domain.Login;
 import org.jzb.majie.domain.Operator;
+import org.jzb.majie.domain.Task;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple2;
 
 import java.security.Principal;
 
@@ -64,6 +68,11 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    public Mono auth(Principal principal) {
+        return QueryService.find(jmongo, principal);
+    }
+
+    @Override
     public Future<DownloadFile> downloadFile(String token) {
         return Future.<User>future(p -> jwtAuth.authenticate(new JsonObject().put("token", token), p)).map(user -> {
             final JsonObject claims = user.principal();
@@ -81,5 +90,19 @@ public class AuthServiceImpl implements AuthService {
         downloadFile.setFileName(attachment.getFileName());
         final JsonObject claims = JsonObject.mapFrom(downloadFile);
         return jwtAuth.generateToken(claims, options);
+    }
+
+    @Override
+    public Mono<Tuple2<Operator, Task>> checkCharger(Principal principal, String id) {
+        final Mono<Operator> operator$ = QueryService.find(jmongo, principal);
+        final Mono<Task> task$ = jmongo.find(Task.class, id);
+        return Mono.zip(operator$, task$).map(tuple2 -> {
+            final Operator operator = tuple2.getT1();
+            final Task task = tuple2.getT2();
+            if (task.getChargers().contains(operator)) {
+                return tuple2;
+            }
+            throw new JAuthorizationError();
+        });
     }
 }

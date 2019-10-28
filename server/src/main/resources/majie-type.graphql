@@ -29,17 +29,25 @@ type Mansion {
     modifyDateTime: LocalDateTime
 }
 
+type MansionQuery {
+    first: Long
+    pageSize: Int
+    count: Long
+    result: [Mansion]
+}
+
 type Operator {
     id: ID!
     name: String
     admin: Boolean
+    mansion: Mansion
 }
 
 type OperatorQuery {
     first: Long
     pageSize: Int
     count: Long
-    operators: [Operator]
+    result: [Operator]
 }
 
 type Task {
@@ -53,6 +61,13 @@ type Task {
     modifyDateTime: LocalDateTime
 }
 
+type TaskQuery {
+    first: Long
+    pageSize: Int
+    count: Long
+    result: [Task]
+}
+
 type TaskFeedback {
     id: ID!
     task: Task
@@ -64,6 +79,13 @@ type TaskFeedback {
     modifyDateTime: LocalDateTime
 }
 
+type TaskFeedbackQuery {
+    first: Long
+    pageSize: Int
+    count: Long
+    result: [TaskFeedback]
+}
+
 type TaskGroup {
     id: ID!
     name: String
@@ -71,6 +93,13 @@ type TaskGroup {
     createDateTime: LocalDateTime
     modifier: Operator
     modifyDateTime: LocalDateTime
+}
+
+type TaskGroupQuery {
+    first: Long
+    pageSize: Int
+    count: Long
+    result: [TaskGroup]
 }
 
 type TaskNotice {

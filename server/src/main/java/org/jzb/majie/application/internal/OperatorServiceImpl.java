@@ -6,7 +6,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import org.jzb.majie.application.OperatorService;
+import org.jzb.majie.application.QueryService;
 import org.jzb.majie.application.command.OperatorUpdateCommand;
+import org.jzb.majie.domain.Mansion;
 import org.jzb.majie.domain.Operator;
 import reactor.core.publisher.Mono;
 
@@ -47,6 +49,20 @@ public class OperatorServiceImpl implements OperatorService {
         final MongoUnitOfWork uow = jmongo.uow();
         return save(principal, jmongo.find(Operator.class, id), command).flatMap(operator -> {
             uow.registerDirty(operator);
+            return uow.rxCommit().thenReturn(operator);
+        });
+    }
+
+    @Override
+    public Mono<Operator> defaultMansion(Principal principal, String mansionId) {
+        final MongoUnitOfWork uow = jmongo.uow();
+        final Mono<Operator> operator$ = QueryService.find(jmongo, principal);
+        final Mono<Mansion> mansion$ = jmongo.find(Mansion.class, mansionId);
+        return Mono.zip(operator$, mansion$).flatMap(tuple2 -> {
+            final Operator operator = tuple2.getT1();
+            uow.registerDirty(operator);
+            final Mansion mansion = tuple2.getT2();
+            operator.setMansion(mansion);
             return uow.rxCommit().thenReturn(operator);
         });
     }

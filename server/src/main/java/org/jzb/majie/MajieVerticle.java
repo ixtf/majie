@@ -4,9 +4,9 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;
+import org.jzb.majie.interfaces.lucene.LuceneVerticle;
+import org.jzb.majie.interfaces.weixin.WeixinInterfaceVerticle;
 import org.jzb.majie.verticle.AgentVerticle;
-import org.jzb.majie.verticle.LuceneVerticle;
-import org.jzb.majie.verticle.WeixinInterfaceVerticle;
 import org.jzb.majie.verticle.WorkerVerticle;
 
 /**

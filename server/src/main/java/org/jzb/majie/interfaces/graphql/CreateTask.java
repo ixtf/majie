@@ -1,5 +1,6 @@
 package org.jzb.majie.interfaces.graphql;
 
+import com.github.ixtf.vertx.graphql.GraphQLMutation;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import graphql.schema.DataFetchingEnvironment;
@@ -14,6 +15,7 @@ import java.security.Principal;
  * @author jzb 2019-10-24
  */
 @Singleton
+@GraphQLMutation("createTask")
 public class CreateTask extends DataFetchers<Task> {
     private final TaskService taskService;
 
@@ -26,6 +28,7 @@ public class CreateTask extends DataFetchers<Task> {
     public void accept(DataFetchingEnvironment env, Promise<Task> promise) {
         final Principal principal = principal(env);
         final TaskUpdateCommand command = command(env, TaskUpdateCommand.class);
-        taskService.create(principal, command).subscribe(promise::complete, promise::fail);
+        taskService.create(principal, command).subscribe(promise::complete, promise::fail, promise::tryComplete);
     }
+
 }

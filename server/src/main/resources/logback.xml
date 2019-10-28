@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <configuration scan="true" scanPeriod="300 seconds" debug="false">
     <jmxConfigurator/>
+    <if condition='isNull("majie.path")'>
+        <then>
+            <property name="majie.path" value="/home/majie"/>
+        </then>
+    </if>
     <property name="PATTERN" value="%d{yyyy-MM-dd/HH:mm:ss} [%thread] %-5level %logger{35} - %msg%n"/>
     <timestamp key="bySecond" datePattern="yyyyMMdd'T'HHmmss"/>
 

@@ -16,4 +16,5 @@ public enum WX_QR_SCENE_ID {
     public int scene_id() {
         return scene_id;
     }
+
 }

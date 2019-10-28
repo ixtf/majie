@@ -16,4 +16,8 @@ public interface TaskService {
     Mono<Task> create(Principal principal, TaskUpdateCommand command);
 
     Mono<Task> update(Principal principal, String id, TaskUpdateCommand command);
+
+    Mono<Task> finish(Principal principal, String id);
+
+    Mono<Task> run(Principal principal, String id);
 }

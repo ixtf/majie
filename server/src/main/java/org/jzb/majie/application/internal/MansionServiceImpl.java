@@ -5,10 +5,13 @@ import com.github.ixtf.persistence.mongo.MongoUnitOfWork;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.jzb.majie.application.MansionService;
 import org.jzb.majie.application.QueryService;
 import org.jzb.majie.application.command.MansionUpdateCommand;
 import org.jzb.majie.domain.Mansion;
+import org.jzb.majie.domain.Operator;
+import org.jzb.majie.domain.TaskGroup;
 import reactor.core.publisher.Mono;
 
 import java.security.Principal;
@@ -31,6 +34,19 @@ public class MansionServiceImpl implements MansionService {
         final MongoUnitOfWork uow = jmongo.uow();
         return save(principal, Mono.just(new Mansion()), command).flatMap(mansion -> {
             uow.registerNew(mansion);
+            mansion.setId(ObjectId.get().toHexString());
+
+            // 新建大厦，需要默认 计划组
+            final TaskGroup taskGroup = new TaskGroup();
+            uow.registerNew(taskGroup);
+            taskGroup.setId(mansion.getId());
+            taskGroup.setMansion(mansion);
+
+            final Operator creator = mansion.getCreator();
+            if (creator.getMansion() == null) {
+                uow.registerDirty(creator);
+                creator.setMansion(mansion);
+            }
             return uow.rxCommit().thenReturn(mansion);
         });
     }

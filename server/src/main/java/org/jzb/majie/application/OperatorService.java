@@ -16,4 +16,6 @@ public interface OperatorService {
     Mono<Operator> create(Principal principal, OperatorUpdateCommand command);
 
     Mono<Operator> update(Principal principal, String id, OperatorUpdateCommand command);
+
+    Mono<Operator> defaultMansion(Principal principal, String mansionId);
 }

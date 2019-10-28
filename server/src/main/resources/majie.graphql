@@ -1,18 +1,24 @@
 type Mutation {
     createOperator(command:OperatorUpdateCommand!): Operator
-    updateOperator(id: ID!,command:OperatorUpdateCommand!): Operator
+    updateOperator(id:ID!,command:OperatorUpdateCommand!): Operator
 
     createMansion(command:MansionUpdateCommand!): Mansion
-    updateMansion(id: ID!,command:MansionUpdateCommand!): Mansion
+    updateMansion(id:ID!,command:MansionUpdateCommand!): Mansion
 
     createTaskGroup(command:TaskGroupUpdateCommand!): TaskGroup
-    updateTaskGroup(id: ID!,command:TaskGroupUpdateCommand!): TaskGroup
+    updateTaskGroup(id:ID!,command:TaskGroupUpdateCommand!): TaskGroup
 
     createTask(command:TaskUpdateCommand!): Task
-    updateTask(id: ID!,command:TaskUpdateCommand!): Task
+    updateTask(id:ID!,command:TaskUpdateCommand!): Task
+
+    createTaskFeedback(command:TaskFeedbackUpdateCommand!): TaskFeedback
+    updateTaskFeedback(id:ID!,command:TaskFeedbackUpdateCommand!): TaskFeedback
 }
 
 type Query {
-    listOperator(first: Int=0,pageSize:Int=50): OperatorQuery
-    hello: String
+    listOperator(first:Int=0,pageSize:Int=50): OperatorQuery
+    listMansion(first:Int=0,pageSize:Int=50): MansionQuery
+    listTaskGroup(first:Int=0,pageSize:Int=50): TaskGroupQuery
+    listTask(first:Int=0,pageSize:Int=50,groupId:String): TaskQuery
+    listTaskFeedback(taskId:ID!,first:Int=0,pageSize:Int=50): TaskFeedbackQuery
 }

@@ -51,8 +51,8 @@ public class FileUploadsVerticle extends AbstractVerticle {
             Flux.fromIterable(body.getJsonArray("fileUploads")).map(JsonObject.class::cast).map(jsonObject -> {
                 final Attachment attachment = new Attachment();
                 attachment.setFileName(jsonObject.getString("fileName"));
-                attachment.setMediaType(jsonObject.getString("contentType"));
-                attachment.setFileSize(jsonObject.getLong("size"));
+                attachment.setContentType(jsonObject.getString("contentType"));
+                attachment.setSize(jsonObject.getLong("size"));
                 return attachmentService.handleUpload(principal, jsonObject.getString("uploadedFileName"), attachment);
             }).map(JsonObject::mapFrom).collectList().map(it -> {
                 final JsonArray jsonArray = new JsonArray();

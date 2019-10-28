@@ -35,11 +35,11 @@ public class Attachment implements IEntityLoggable<Operator> {
     @Getter
     @Setter
     @Column
-    private long fileSize;
+    private long size;
     @Getter
     @Setter
     @Column
-    private String mediaType;
+    private String contentType;
 
     @JsonIgnore
     @Getter

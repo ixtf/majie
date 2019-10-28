@@ -7,6 +7,12 @@ input OperatorUpdateCommand{
     admin: Boolean
 }
 
+input TaskFeedbackUpdateCommand{
+    task: EntityDTO!
+    content: String
+    attachments: [EntityDTO]
+}
+
 input TaskGroupUpdateCommand{
     mansion: EntityDTO!
     name: String!
@@ -15,7 +21,8 @@ input TaskGroupUpdateCommand{
 input TaskUpdateCommand{
     group: EntityDTO!
     title: String!
-    content: String!
+    content: String
+    attachments: [EntityDTO]
 }
 
 input TokenCommand{

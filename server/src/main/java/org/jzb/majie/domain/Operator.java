@@ -23,6 +23,13 @@ public class Operator implements IOperator {
     @Id
     @NotBlank
     private String id;
+    /**
+     * 默认
+     */
+    @Getter
+    @Setter
+    @Column
+    private Mansion mansion;
     @ToString.Include
     @Getter
     @Setter

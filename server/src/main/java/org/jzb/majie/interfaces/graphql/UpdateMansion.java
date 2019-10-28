@@ -1,5 +1,6 @@
 package org.jzb.majie.interfaces.graphql;
 
+import com.github.ixtf.vertx.graphql.GraphQLMutation;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import graphql.schema.DataFetchingEnvironment;
@@ -14,6 +15,7 @@ import java.security.Principal;
  * @author jzb 2019-10-24
  */
 @Singleton
+@GraphQLMutation("updateMansion")
 public class UpdateMansion extends DataFetchers<Mansion> {
     private final MansionService mansionService;
 
@@ -27,6 +29,8 @@ public class UpdateMansion extends DataFetchers<Mansion> {
         final Principal principal = principal(env);
         final MansionUpdateCommand command = command(env, MansionUpdateCommand.class);
         final String id = env.getArgument("id");
-        mansionService.update(principal, id, command).subscribe(promise::complete, promise::fail);
+        mansionService.update(principal, id, command).subscribe(promise::complete, promise::fail, promise::tryComplete);
     }
+
+
 }

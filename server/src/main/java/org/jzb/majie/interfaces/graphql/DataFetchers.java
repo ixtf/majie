@@ -2,7 +2,10 @@ package org.jzb.majie.interfaces.graphql;
 
 import com.github.ixtf.japp.core.exception.JAuthenticationError;
 import com.github.ixtf.vertx.Jvertx;
+import com.github.ixtf.vertx.graphql.GraphQLMutation;
+import com.github.ixtf.vertx.graphql.GraphQLQuery;
 import com.github.ixtf.vertx.graphql.Jgraphql;
+import com.google.common.collect.ImmutableMap;
 import com.sun.security.auth.UserPrincipal;
 import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
@@ -14,7 +17,7 @@ import io.vertx.ext.auth.User;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.graphql.VertxDataFetcher;
 import io.vertx.ext.web.handler.graphql.VertxPropertyDataFetcher;
-import org.jzb.majie.MajieModule;
+import org.jzb.majie.Util;
 
 import java.security.Principal;
 import java.util.Optional;
@@ -28,6 +31,19 @@ import static com.github.ixtf.japp.core.Constant.MAPPER;
 public abstract class DataFetchers<T> implements BiConsumer<DataFetchingEnvironment, Promise<T>> {
 
     public static RuntimeWiring buildWiring() {
+        final ImmutableMap.Builder<String, DataFetcher> queryBuilder = ImmutableMap.builder();
+        final ImmutableMap.Builder<String, DataFetcher> mutationBuilder = ImmutableMap.builder();
+        Util.collectSubInstance(DataFetchers.class).forEach(o -> {
+            final VertxDataFetcher dataFetcher = new VertxDataFetcher(o);
+
+            Optional.ofNullable(o.getClass().getAnnotation(GraphQLQuery.class))
+                    .map(GraphQLQuery::value)
+                    .ifPresent(it -> queryBuilder.put(it, dataFetcher));
+
+            Optional.ofNullable(o.getClass().getAnnotation(GraphQLMutation.class))
+                    .map(GraphQLMutation::value)
+                    .ifPresent(it -> mutationBuilder.put(it, dataFetcher));
+        });
         return RuntimeWiring.newRuntimeWiring()
                 .scalar(Jgraphql.getGraphQLLocalDate())
                 .scalar(Jgraphql.getGraphQLLocalDateTime())
@@ -38,27 +54,9 @@ public abstract class DataFetchers<T> implements BiConsumer<DataFetchingEnvironm
                         return new VertxPropertyDataFetcher(environment.getFieldDefinition().getName());
                     }
                 })
-                .type("Query", builder -> builder
-                        .dataFetcher("listOperator", dataFetcher(ListOperator.class))
-                )
-                .type("Mutation", builder -> builder
-                        .dataFetcher("createOperator", dataFetcher(CreateOperator.class))
-                        .dataFetcher("updateOperator", dataFetcher(UpdateOperator.class))
-
-                        .dataFetcher("createMansion", dataFetcher(CreateMansion.class))
-                        .dataFetcher("updateMansion", dataFetcher(UpdateMansion.class))
-
-                        .dataFetcher("createTaskGroup", dataFetcher(CreateTaskGroup.class))
-                        .dataFetcher("updateTaskGroup", dataFetcher(UpdateTaskGroup.class))
-
-                        .dataFetcher("createTask", dataFetcher(CreateTask.class))
-                        .dataFetcher("updateTask", dataFetcher(UpdateTask.class))
-                ).build();
-    }
-
-    private static VertxDataFetcher dataFetcher(Class<? extends BiConsumer> clazz) {
-        final BiConsumer<DataFetchingEnvironment, Promise> instance = MajieModule.getInstance(clazz);
-        return new VertxDataFetcher(instance);
+                .type("Query", builder -> builder.dataFetchers(queryBuilder.build()))
+                .type("Mutation", builder -> builder.dataFetchers(mutationBuilder.build()))
+                .build();
     }
 
     public static Principal principal(DataFetchingEnvironment env) {

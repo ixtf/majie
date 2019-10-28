@@ -21,6 +21,9 @@ import java.util.Date;
 @EntityListeners(LuceneListener.class)
 @Entity
 public class TaskGroup implements IEntityLoggable<Operator> {
+    /**
+     * id 和 mansion 相同，则为 mansion 的默认组
+     */
     @ToString.Include
     @EqualsAndHashCode.Include
     @Getter

@@ -2,6 +2,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
     id 'io.franzbecker.gradle-lombok' version '3.2.0'
     id 'com.github.johnrengelman.shadow' version '5.1.0'
+    id 'com.google.cloud.tools.jib' version '1.7.0'
 }
 
 group 'org.jzb'
@@ -43,6 +44,8 @@ dependencies {
             "io.vertx:vertx-web",
             "io.vertx:vertx-auth-jwt",
             "io.vertx:vertx-health-check"
+    // https://mvnrepository.com/artifact/org.codehaus.janino/janino
+    compile group: 'org.codehaus.janino', name: 'janino', version: '3.1.0'
 }
 
 mainClassName = "io.vertx.core.Launcher"
@@ -57,4 +60,16 @@ jar.manifest {
             'Source-Compatibility': sourceCompatibility,
             'Target-Compatibility': targetCompatibility
     )
+}
+
+jib {
+    from {
+        image = 'openjdk:alpine'
+    }
+    to {
+        image = 'orgjzb/majie'
+    }
+    container {
+        mainClassName = "io.vertx.core.Launcher"
+    }
 }

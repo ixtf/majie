@@ -7,10 +7,9 @@ import lombok.SneakyThrows;
 import org.apache.lucene.analysis.cn.smart.SmartChineseAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.facet.FacetsConfig;
+import org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyReader;
 import org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyWriter;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.index.Term;
+import org.apache.lucene.index.*;
 import org.apache.lucene.store.FSDirectory;
 import org.jzb.majie.Util;
 import reactor.core.publisher.Mono;
@@ -31,7 +30,7 @@ public abstract class BaseLucene<T extends IEntity> {
     protected final Jmongo jmongo;
 
     @SneakyThrows(IOException.class)
-    protected BaseLucene( Jmongo jmongo) {
+    protected BaseLucene(Jmongo jmongo) {
         this.jmongo = jmongo;
         entityClass = entityClass();
         final Path indexPath = Util.luceneIndexPath(entityClass);
@@ -39,6 +38,16 @@ public abstract class BaseLucene<T extends IEntity> {
         final Path taxoPath = Util.luceneTaxoPath(entityClass);
         taxoWriter = new DirectoryTaxonomyWriter(FSDirectory.open(taxoPath));
         facetsConfig = facetsConfig();
+    }
+
+    @SneakyThrows(IOException.class)
+    public IndexReader indexReader() {
+        return DirectoryReader.open(indexWriter);
+    }
+
+    @SneakyThrows(IOException.class)
+    public DirectoryTaxonomyReader taxoReader() {
+        return new DirectoryTaxonomyReader(taxoWriter);
     }
 
     public Mono<Void> index(String id) {

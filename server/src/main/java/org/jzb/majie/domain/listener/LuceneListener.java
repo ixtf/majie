@@ -3,7 +3,7 @@ package org.jzb.majie.domain.listener;
 import com.github.ixtf.persistence.IEntity;
 import io.vertx.core.Vertx;
 import org.jzb.majie.MajieModule;
-import org.jzb.majie.verticle.LuceneVerticle;
+import org.jzb.majie.interfaces.lucene.LuceneVerticle;
 
 import javax.persistence.PostPersist;
 import javax.persistence.PostRemove;

@@ -2,7 +2,7 @@ package org.jzb.majie.interfaces.rest;
 
 import com.google.inject.Inject;
 import io.vertx.core.Vertx;
-import org.jzb.majie.verticle.WeixinInterfaceVerticle;
+import org.jzb.majie.interfaces.weixin.WeixinInterfaceVerticle;
 import org.jzb.weixin.mp.MpClient;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;

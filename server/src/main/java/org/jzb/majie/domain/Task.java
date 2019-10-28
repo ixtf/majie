@@ -11,6 +11,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -32,7 +33,6 @@ public class Task implements IEntityLoggable<Operator> {
     @Getter
     @Setter
     @Column
-    @NotNull
     private TaskGroup group;
     @ToString.Include
     @Getter
@@ -50,6 +50,18 @@ public class Task implements IEntityLoggable<Operator> {
     @Column
     @NotNull
     private TaskStatus status;
+    @Getter
+    @Setter
+    @Column
+    private Collection<Attachment> attachments;
+    @Getter
+    @Setter
+    @Column
+    private Collection<Operator> chargers;
+    @Getter
+    @Setter
+    @Column
+    private Collection<Operator> participants;
 
     @Getter
     @Setter

@@ -3,6 +3,9 @@ package majie;
 import io.vertx.core.json.JsonObject;
 import lombok.Data;
 import lombok.Getter;
+import reactor.core.publisher.Flux;
+
+import java.util.List;
 
 /**
  * @author jzb 2019-10-26
@@ -16,5 +19,12 @@ public class LazyTest {
 
     public static void main(String[] args) {
         System.out.println(new LazyTest().getTest());
+
+        Flux.fromIterable(List.of())
+                .collectList()
+                .subscribe(it -> {
+                    System.out.println(it);
+                });
+
     }
 }

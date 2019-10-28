@@ -1,4 +1,4 @@
-package org.jzb.majie.verticle;
+package org.jzb.majie.interfaces.lucene;
 
 import com.github.ixtf.japp.core.J;
 import com.github.ixtf.persistence.IEntity;
@@ -9,7 +9,6 @@ import io.vertx.core.eventbus.MessageConsumer;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 import org.jzb.majie.MajieModule;
-import org.jzb.majie.interfaces.lucene.LuceneService;
 
 /**
  * @author jzb 2019-10-24

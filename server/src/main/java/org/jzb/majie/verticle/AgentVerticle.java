@@ -82,7 +82,6 @@ public class AgentVerticle extends AbstractVerticle {
                 rc.fail(ar.cause());
             }
         }));
-
         Jvertx.resolve(AgentResolver.class).forEach(it -> it.router(router, MajieModule::getInstance));
 
         final HttpServerOptions httpServerOptions = new HttpServerOptions()
