@@ -21,17 +21,6 @@ public class MajieDebug {
 
     public static void main(String[] args) {
         MajieLauncher.main(new String[]{});
-//        Vertx.vertx().deployVerticle(MajieVerticle.class, new DeploymentOptions(), ar -> {
-//            if (ar.succeeded()) {
-//                log.info("success");
-////                qrcode();
-////                token();
-////                verifyUrl();
-////                decryptMsg();
-//            } else {
-//                log.error("fail", ar.cause());
-//            }
-//        });
     }
 
     private static void token() {
