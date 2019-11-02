@@ -22,6 +22,7 @@ import io.vertx.ext.web.handler.graphql.ApolloWSHandler;
 import io.vertx.ext.web.handler.graphql.GraphQLHandler;
 import io.vertx.ext.web.handler.graphql.GraphiQLHandler;
 import io.vertx.ext.web.handler.graphql.GraphiQLHandlerOptions;
+import io.vertx.micrometer.PrometheusScrapingHandler;
 import org.apache.commons.io.FileUtils;
 import org.jzb.majie.MajieModule;
 import org.jzb.majie.application.AuthService;
@@ -46,6 +47,7 @@ public class AgentVerticle extends AbstractVerticle {
         router.route().handler(BodyHandler.create().setUploadsDirectory(FileUtils.getTempDirectoryPath()));
         router.route().handler(ResponseContentTypeHandler.create());
         router.route("/status").handler(HealthCheckHandler.create(vertx));
+        router.route("/metrics").handler(PrometheusScrapingHandler.create());
 
         router.post("/downloads/:token").produces(APPLICATION_OCTET_STREAM).handler(rc -> {
             final AuthService authService = MajieModule.getInstance(AuthService.class);

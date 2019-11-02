@@ -1,15 +1,13 @@
 package majie;
 
-import io.vertx.core.DeploymentOptions;
-import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.PubSecKeyOptions;
 import io.vertx.ext.auth.jwt.JWTAuth;
 import io.vertx.ext.jwt.JWTOptions;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.jzb.majie.MajieLauncher;
 import org.jzb.majie.MajieModule;
-import org.jzb.majie.MajieVerticle;
 import org.jzb.weixin.mp.MpClient;
 import org.jzb.weixin.mp.qrcode.MpQrcodeResponse;
 
@@ -20,18 +18,20 @@ import static org.jzb.majie.domain.data.WX_QR_SCENE_ID.TASK_CHARGE_INVITE;
  */
 @Slf4j
 public class MajieDebug {
+
     public static void main(String[] args) {
-        Vertx.vertx().deployVerticle(MajieVerticle.class, new DeploymentOptions(), ar -> {
-            if (ar.succeeded()) {
-                log.info("success");
-//                qrcode();
-//                token();
-//                verifyUrl();
-//                decryptMsg();
-            } else {
-                log.error("fail", ar.cause());
-            }
-        });
+        MajieLauncher.main(new String[]{});
+//        Vertx.vertx().deployVerticle(MajieVerticle.class, new DeploymentOptions(), ar -> {
+//            if (ar.succeeded()) {
+//                log.info("success");
+////                qrcode();
+////                token();
+////                verifyUrl();
+////                decryptMsg();
+//            } else {
+//                log.error("fail", ar.cause());
+//            }
+//        });
     }
 
     private static void token() {

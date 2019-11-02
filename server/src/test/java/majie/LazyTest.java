@@ -3,8 +3,10 @@ package majie;
 import io.vertx.core.json.JsonObject;
 import lombok.Data;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import reactor.core.publisher.Flux;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -25,6 +27,11 @@ public class LazyTest {
                 .subscribe(it -> {
                     System.out.println(it);
                 });
+        test();
+    }
 
+    @SneakyThrows(IOException.class)
+    private static void test() {
+        throw new IOException("test");
     }
 }

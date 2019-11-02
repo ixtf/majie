@@ -43,12 +43,14 @@ dependencies {
             "com.google.inject:guice",
             "io.vertx:vertx-web",
             "io.vertx:vertx-auth-jwt",
+            "io.vertx:vertx-micrometer-metrics",
+            "io.micrometer:micrometer-registry-prometheus:1.3.0",
             "io.vertx:vertx-health-check"
     // https://mvnrepository.com/artifact/org.codehaus.janino/janino
     compile group: 'org.codehaus.janino', name: 'janino', version: '3.1.0'
 }
 
-mainClassName = "io.vertx.core.Launcher"
+mainClassName = "org.jzb.majie.MajieLauncher"
 
 jar.manifest {
     attributes(
